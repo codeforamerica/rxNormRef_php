@@ -76,7 +76,7 @@ class rxNormRef extends rxNormApi{
 		// if we haven't died by now then close and flush the ob cache for the final time
 		self::ob_cacher(1);
 		// echo the footer and stats to screen.
-		echo $this->footer .  self::stats() . "\n\t</body>\n</html>";
+		echo $this->footer .  self::stats() . "\n</div>\n\t</body>\n</html>";
 
 	}
 
@@ -268,5 +268,6 @@ echo '
 	</div>
 
 </ul>
+<div id ="content">
 ';
  new RxNormRef;
