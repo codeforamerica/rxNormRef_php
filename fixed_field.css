@@ -1,0 +1,94 @@
+hr {
+/*
+temporary fix
+*/	
+	width: 800px;	clear: none;
+	border: none;
+	float: left;
+}
+
+p{padding-top: 10px;
+clear:both;}
+
+#header{clear: both;width: 800px;background-color: white;height: 75px;padding: 20px 0;margin: 0;margin-bottom: 10px;
+top: 0;
+position: fixed;
+}
+ul {
+	list-style-type: none;	
+
+	float: left;margin: 0px 0;padding: 0px;
+}
+
+li.value {
+	padding-top: 2px;
+}
+
+li.property {
+	width: 760px;
+	padding: 0px 0;
+	margin-top: 20px;
+	font-size: 24px;
+	color: maroon;text-align: left;
+	border-top: solid black 1px;
+	font-family: Arial, san-serif;
+}
+
+.main_form, h1 {padding: 0px 0px 0 0px;margin: 0;border-bottom: solid gray 8px;
+	float: left;width: 275px;height: 80px;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+#header h1{width: 30%;
+	padding-left: 10px;
+}
+
+.main_form fieldset{	padding-top: 10px;border: none;float: left;clear: none;}
+
+ul li ul li.property{
+	background-color: none;
+	font-size: 17px;border: none;	
+	text-align:left;
+	padding: 0;width: 180px;padding-left: 10px;
+}
+ul ul{
+	border: none;
+	width: 800px;
+}
+
+#content {
+	margin-top: 115px;
+	clear: both;
+	padding: 0 10px;
+}
+
+
+ul li ul li{
+	margin: 0;
+	border: none;padding: 0 10px;background-color: none;
+}
+
+ul li ul{
+	background-color: whitesmoke;
+	border: none;
+	clear: left;
+	width: 190px; float: left; 
+	padding: 0;margin: 0;
+}
+
+#help {clear: both;	border-top: solid black 1px; padding: 0;margin: 0;
+bottom: 0; 
+}
+html{background-color: gray;}
+
+body{
+	background-color: whitesmoke;
+	width: 800px;
+	margin: 0px auto;
+}
+
+h3 {clear: both;}
+h4,b,p,h3{
+	margin: 5px;clear: none;
+}
+
