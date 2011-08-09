@@ -1,70 +1,82 @@
-
 hr {
 /*
 temporary fix
 */	
-	width: 600px;	clear: none;
+	width: 800px;	clear: none;
 	border: none;
 	float: left;
 }
 
-#header h1 {
-	font-weight: bold;
-	font-family: Palatino, "Lucida Grande", serif;
-	text-align: center;
-}
+p{
+clear:both;}
+
+#header{float: right;clear: none;width: 100%;border-bottom: solid black 1px; margin-bottom: 10px;}
 ul {
 	list-style-type: none;	
 	clear: right;
-	float: left;margin: 0px 0;padding: 3px;
+	float: left;margin: 0px 0;padding: 0px;
+}
+
+li.value {
+	padding-top: 2px;
 }
 
 li.property {
-	width: 100%;
-	padding: 10px 0;
-	font-size: 20px;
+	width: 760px;
+	padding: 0px 0;
+	margin-top: 20px;
+	font-size: 24px;
 	color: maroon;text-align: left;
 	border-top: solid black 1px;
 	font-family: Arial, san-serif;
 }
 
-ul li ul li.property{
-	font-size: 17px;	
-	background-color: lightgray;
-	width: 100%;	margin: 0px;
-	text-align:center;
-	color: blue;
+.main_form, h1 {padding: 15px 0;margin: 0;
+	float: left;width: 33%;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
 
+.main_form fieldset{	padding-top: 10px;border: none;float: left;clear: none;}
+
+ul li ul li.property{
+	background-color: none;
+	font-size: 17px;border: none;	
+	text-align:left;
+	padding: 0;width: 180px;padding-left: 10px;
 }
 ul ul{
 	border: none;
-	width: 585px;
-    padding: 0;margin: 0;
+	width: 800px;
+    padding: 10px;margin: 0;
+	position:relative;
+	left:10px;margin-bottom:-20px;
 }
 
-ul li ul li.property{
-	border-right: solid black 2px;padding: 0 2px;margin:0 -15px 0 0;
-}
+
 ul li ul li{
-	border-right: solid black;
-	border: none;padding: 10px;
-	float: left;
+	margin: 0;
+	border: none;padding: 0 10px;background-color: none;
 }
 
 ul li ul{
+	background-color: whitesmoke;
 	border: none;
 	clear: left;
-	width: 122px; float: left; 
+	width: 190px; float: left; 
 	padding: 0;margin: 0;
 }
 
-#help {
-clear: both;	
-}
+#help {clear: both;	}
+html{background-color: gray;}
 
 body{
-	width: 600px;
+	background-color: whitesmoke;
+	width: 800px;
 	margin: 10px auto;
 	padding: 10px;
 }
 
+h3 {clear: both;}
+h4,b,p,h3{
+	margin: 5px;clear: none;
+}
