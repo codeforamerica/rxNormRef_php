@@ -16,9 +16,27 @@ require 'rxNormApi.php';
 define('PROGRESSIVE_LOAD', true);
 // progressive load doesnt load cached pages 'progressively'
 define('CACHE_QUERY',false);
+
+
 // caching requires progressive load to be true
 // make sure this folder has proper permissions
 define('CACHE_STORE','cache_query/');
+// shows the umlscui column, enabled by default
+define('SHOW_UML',false);
+// force 'synonyml column to show (for debugging)
+// Special handling of synonym column is required since they only appear to have values in all but two concept groups 
+define('SHOW_ALL_SYNONYM',false);
+// changing this will def. mess up the included template
+define('SHOW_RXCUI',true);
+define('SHOW_NAME',true);
+// these still work, but will change the layout signfigantly depending on total number of columns
+// these are all very redudant to display so disabled by default
+define('SHOW_LANGUAGE',false);
+define('SHOW_TTY',false);
+define('SHOW_SUPPRESS',false);
+// use if you're a data minor and have written another xml stucture... the 
+// rxNorm structure is verbose and very embeded, it could definately use a shift
+define('SHOW_ALL',false);
 
 class rxNormRef extends rxNormApi{
 
@@ -31,6 +49,17 @@ class rxNormRef extends rxNormApi{
 		$this->oh_memory = round(memory_get_usage() / 1024);
 		$this->footer = "\n\t<div id = 'help'>\n\t\t<h3>Where to start?</h3>\n\t\t<p>An RXCUI refers to a record which can refer to a drug, or a drug concept.</p>\n\t\t<p>First type in the name of a concept or drug, to look up the RXCUI, and select the type of search query to perform from the drop down menu.</p>\n\t<h3>About</h3>\n\t\t<p>Built with PHP5, and the <a href='https://github.com/codeforamerica/rxNorm_php'>rxNorm_php api library</a> to access the <a href='http://www.nlm.nih.gov/'>NiH databases</a>.</p>\n\t</div>
 		";
+		// set up the 'filter' variable to determine what columns to show
+		if(SHOW_ALL == FALSE){
+			if(SHOW_LANGUAGE == false  ) $this->c_filter []='language';
+			if(SHOW_SUPPRESS == false) $this->c_filter []='suppress';
+			if(SHOW_RXCUI == false) $this->c_filter []='rxcui';
+			if(SHOW_NAME == false) $this->c_filter []='name';
+			if(SHOW_ALL_SYNONYM == FALSE) $this->c_filter []= 'synonym';
+			if(SHOW_TTY == false) $this->c_filter []='tty';
+			if(SHOW_UML == false) $this->c_filter []= 'umlscui';
+		}
+		// of course I could make a checkbox panel to allow for any combination of display fields, and cache entire returned xml results to do manipulations
 
 		if(PROGRESSIVE_LOAD == true){
    	 	    @apache_setenv('no-gzip', 1);
@@ -41,6 +70,7 @@ class rxNormRef extends rxNormApi{
 			ob_implicit_flush(1);
 			ob_start();
 		}
+		
 		// process any post if existant
 		if($_POST) self::post_check();
 		// if we haven't died by now then close and flush the ob cache for the final time
@@ -71,12 +101,10 @@ class rxNormRef extends rxNormApi{
 		}
 		if($_POST['searchTerm'] && $_POST['action']== 'SearchTerm') {
 		// look up inside of defined cache location
-			self::ob_cacher();
 			$xml = new SimpleXMLElement($this->findRxcuiByString($_POST['searchTerm']));
 			$id = $xml->idGroup->rxnormId;
 			if($id != '') {
 				echo '<p>Term "<b>'. $_POST['searchTerm'] . '</b>" matches RXCUI: <b>' .$id . "</b></p>\n" ;
-				self::ob_cacher();
 			}
 			else{
 				$search = new SimpleXMLElement($this->getSpellingSuggestions($_POST['searchTerm']));
@@ -93,7 +121,6 @@ class rxNormRef extends rxNormApi{
 			}
 			$xml = new SimpleXMLElement($this->getAllRelatedInfo($id));
 			self::list_2d_xmle($xml->allRelatedGroup->conceptGroup);
-			self::ob_cacher();	
 			unset($xml);
 		}
 		if($_POST['searchTerm'] && $_POST['action']== 'Drugs') {
@@ -120,7 +147,10 @@ class rxNormRef extends rxNormApi{
 			'TMSY'=>'Term Type',
 			'BPCK'=>'Brand Name Pack',
 			'GPCK'=>'Generic Pack');
-		return "\n\t\t<ul>\n\t\t\t<li class='$key_css_class'>".($normalElements[strtoupper($key)]?$normalElements[strtoupper($key)]:$key)."</li>".($key!='tty' && $value != '' ? "\n\t\t\t<li class='$value_css_class'>".($normalElements[strtoupper($value)]?$normalElements[strtoupper($value)]:$value)."</li>":NULL)."\n\t\t</ul>\n";
+
+// return only the value in a  single element list?? or bypas this completely?
+//		if($key ==null) return
+		return  "\n\t\t<ul>\n\t\t\t<li class='$key_css_class'>".($normalElements[strtoupper($key)]?$normalElements[strtoupper($key)]:$key)."</li>".($key!='tty' && $value != '' ? "\n\t\t\t<li class='$value_css_class'>".($normalElements[strtoupper($value)]?$normalElements[strtoupper($value)]:$value)."</li>":NULL)."\n\t\t</ul>\n";
 	}
 
 	function cache_token(){
@@ -133,16 +163,14 @@ class rxNormRef extends rxNormApi{
 	}
 
 	function ob_cacher($stop=NULL){
-		global $footer;
 		if(PROGRESSIVE_LOAD == true){		
 			if(CACHE_QUERY == true && $stop == 1){
 				$put_file = CACHE_STORE . self::cache_token();
-				//die($put_file);
 				$cache = ob_get_flush();
 				if(!file_exists($put_file))
 					file_put_contents("$put_file", $cache);
 				}
-				elseif(CACHE_QUERY != true){
+			elseif(CACHE_QUERY != true){
 				ob_end_flush();
 				if($stop!= NULL ) ob_start();	
 			}elseif($_POST && CACHE_QUERY == TRUE){
@@ -163,31 +191,36 @@ class rxNormRef extends rxNormApi{
 			foreach($xml->properties as $value){
 				$result .="\t<ul>";
 				foreach($value as $key=>$value2)
-					$result .=  ($value2 != '' ? "<li>" .self::xmle_table_row($key,$value2) . "</li>": NULL);
+					$result .=  ($value2 != '' ? "<li>" .self::xmle_table_row(NULL,$value2) . "</li>": NULL);
 				$result .="\t</ul>";
 			}
 		else{
 			foreach($xml as $value){
 			// second row avoids displaying the parameter name for subsequent rows
 			$second_row = false;
+			// parent name is used to determine what columns to display (rather than parse the xml object)
+			$parent_name = '';
 				foreach($value as $key=>$value2){
 					if($key =='conceptProperties'){
-						foreach($value2 as $key3=>$value3)
-						// getting rid of column values that are redudant and LANGUAGE
-							if($key3 != 'tty' && $key3 != 'suppress' && $key3 != 'language'){
-									echo ($key3=='rxcui'?'<hr>':NULL). "\n<ul>\n\t<li>" .($second_row==true?self::xmle_table_row(NULL,$value3):self::xmle_table_row($key3,$value3)) .  "\n\t</li>\n</ul>" ;
-									self::ob_cacher();
+						foreach($value2 as $key3=>$value3){
+						// getting rid of column values that are redudant and LANGUAGE, also only showing the synoym columns for SCD and SBD types .. but these may exist in  other queries (possibly..)
+							if((!in_array($key3,$this->c_filter) )  || ($key3 == 'synonym' && in_array(strtoupper($parent_name),array( 'SCD','SBD')))){
+//								if($second_row == true) echo "<ul><li><ul><li>$value3</li><li></li></ul></li></ul>";
+//								else
+								echo ($key3=='rxcui'?'<hr>':NULL). "\n<ul>\n\t<li>" .($second_row==true?self::xmle_table_row(NULL,$value3):self::xmle_table_row($key3,$value3)) .  "\n\t</li>\n</ul>" ;
 							}
+						}
 						$second_row = true;
 					}elseif($value->conceptProperties && $value2 != ''){
+						 if($value2 != '') $parent_name = $value2;
 						echo "\n\t<ul>\n\t" .self::xmle_table_row(($key != 'tty'?$key:$value2),($key != 'tty'?$value2:NULL)). "\n</ul>";
-						self::ob_cacher();
 						}
 				}
 		}
 		}
 		unset($xml);
 		unset($result);
+		self::ob_cacher();
 	}
 	function stats($cache=false){
 		return ($cache!=false?'<b><small>Rendering from cache</small></b><br>':NULL)."<b>Memory use: " . round(memory_get_usage() / 1024) . 'k'. "</b><br><b>Load time : "
@@ -204,8 +237,7 @@ echo '
 	<body>
 	<div id = "header">
 		<h1>RxNorm Reference</h1>
-	</div>
-	<form method="post">
+	<form method="post" class="main_form">
 		<fieldset>
 			<legend>Search </legend>
 			<input type="text" name="searchTerm"/>
@@ -216,7 +248,7 @@ echo '
 			<input type ="submit">
 		</fieldset>
 	</form>
-	<form method="post">
+	<form method="post" class="main_form">
 		<fieldset>
 			<legend>Lookup RXCUI</legend>
 			<input type="text" name="rxcui" value="'.($_POST['rxcui']?$_POST['rxcui']:NULL).'"/>
@@ -232,5 +264,9 @@ echo '
 				</select>				
 			<input type ="submit">
 		</fieldset>
-		</form>';
+		</form>
+	</div>
+
+</ul>
+';
  new RxNormRef;
