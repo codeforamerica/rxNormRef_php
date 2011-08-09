@@ -16,8 +16,7 @@ position: fixed;
 }
 ul {
 	list-style-type: none;	
-
-	float: left;margin: 0px 0;padding: 0px;
+	float: left;margin: 0px 0;padding: 0px;padding-left: 0px;
 }
 
 li.value {
@@ -26,12 +25,11 @@ li.value {
 
 li.property {
 	width: 760px;
-	padding: 0px 0;
-	margin-top: 20px;
-	font-size: 24px;
+	margin-top: 10px;
+	font-size: 24px;background-color: lightgray;
 	color: maroon;text-align: left;
 	border-top: solid black 1px;
-	font-family: Arial, san-serif;
+	font-family: Arial, san-serif;padding: 10px;
 }
 
 .main_form, h1 {padding: 0px 0px 0 0px;margin: 0;border-bottom: solid gray 8px;
@@ -53,13 +51,14 @@ ul li ul li.property{
 }
 ul ul{
 	border: none;
-	width: 800px;
+	width: 770px;
 }
 
 #content {
 	margin-top: 115px;
 	clear: both;
 	padding: 0 10px;
+	padding-bottom: 80px;
 }
 
 
@@ -76,6 +75,7 @@ ul li ul{
 	padding: 0;margin: 0;
 }
 
+
 #help {clear: both;	border-top: solid black 1px; padding: 0;margin: 0;
 bottom: 0; 
 }
@@ -90,5 +90,20 @@ body{
 h3 {clear: both;}
 h4,b,p,h3{
 	margin: 5px;clear: none;
+}
+
+#stats {
+	float: right;
+clear: both;
+background-color: lightgray;
+padding: 10px;
+width: 780px;margin-left: -10px;margin-top: 100px;
+
+position: fixed;
+bottom: 0;
+}
+#stats p{ text-align: right;
+margin: 0;margin-right: 10px;position: static;top: 0;
+	clear:none;float: right;
 }
 
