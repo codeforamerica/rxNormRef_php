@@ -76,7 +76,7 @@ class rxNormRef extends rxNormApi{
 		// if we haven't died by now then close and flush the ob cache for the final time
 		self::ob_cacher(1);
 		// echo the footer and stats to screen.
-		echo $this->footer .  self::stats() . "\n</div>\n\t</body>\n</html>";
+		echo $this->footer . '<div id="stats">' . self::stats().'</div>' . "\n</div>\n\t</body>\n</html>";
 
 	}
 
@@ -104,16 +104,16 @@ class rxNormRef extends rxNormApi{
 			$xml = new SimpleXMLElement($this->findRxcuiByString($_POST['searchTerm']));
 			$id = $xml->idGroup->rxnormId;
 			if($id != '') {
-				echo '<p>Term "<b>'. $_POST['searchTerm'] . '</b>" matches RXCUI: <b>' .$id . "</b></p>\n" ;
+				echo '<p class="term_result">Term "<b>'. $_POST['searchTerm'] . '</b>" matches RXCUI: <b>' .$id . "</b></p>\n" ;
 			}
 			else{
 				$search = new SimpleXMLElement($this->getSpellingSuggestions($_POST['searchTerm']));
-				echo '<h3>Term <b>"'. $_POST['searchTerm'].'"</b> not found</h3>
+				echo '<p class="term_result"><h3>Term <b>"'. $_POST['searchTerm'].'"</b> not found</h3>
 				<h4>Did you mean?</h4>' ;
 				foreach($search->suggestionGroup->suggestionList->suggestion as $loc=>$value)
 					if($loc==0) $first = $value;
-						echo "\n\t$value\t\n";
-				echo '<br><b>Showing first sugestion '.$first.'</b>';
+						echo "\n\t<p class='suggestion'>$value</p>\t\n";
+				echo '</p><p><b>Showing first sugestion '.$first.'</b></p>';
 				unset($search);
 				$xml= new SimpleXMLElement($this->findRxcuiByString("$first"));
 				$id= $xml->idGroup->rxnormId;
@@ -223,8 +223,8 @@ class rxNormRef extends rxNormApi{
 		self::ob_cacher();
 	}
 	function stats($cache=false){
-		return ($cache!=false?'<b><small>Rendering from cache</small></b><br>':NULL)."<b>Memory use: " . round(memory_get_usage() / 1024) . 'k'. "</b><br><b>Load time : "
-	. sprintf("%.4f", (((float) array_sum(explode(' ',microtime())))-$this->start_time)) . " seconds</b><br><b>Overhead memory : ".$this->oh_memory." k</b>";
+		return ($cache!=false?'<p><b><small>Rendering from cache</small></b></p>':NULL)."<p><b>Memory use: " . round(memory_get_usage() / 1024) . 'k'. "</b><p><b>Load time : "
+	. sprintf("%.4f", (((float) array_sum(explode(' ',microtime())))-$this->start_time)) . " seconds</b></p><p><b>Overhead memory : ".$this->oh_memory." k</b></p>";
 
 	}
 }
@@ -232,7 +232,7 @@ echo '
 <html>
 	<head>
 		<title>RxNorm Reference</title>
-		<link rel="stylesheet" type="text/css" href="main.css" />
+		<link rel="stylesheet" type="text/css" href="fixed_field.css" />
 	</head>
 	<body>
 	<div id = "header">
