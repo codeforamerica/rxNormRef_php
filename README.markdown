@@ -2,7 +2,7 @@ RxNormRef
 =========
 **Ronaldo Barbachano**
 
-**Aug. 2010**
+**Aug. 2011**
 
 A simple **single page web application** to access the NIH's database of semantic medical terms. Uses the rxNorm_php api library maintained by Code For America.
 
