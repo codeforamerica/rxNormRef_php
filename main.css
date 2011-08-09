@@ -1,0 +1,70 @@
+
+hr {
+/*
+temporary fix
+*/	
+	width: 600px;	clear: none;
+	border: none;
+	float: left;
+}
+
+#header h1 {
+	font-weight: bold;
+	font-family: Palatino, "Lucida Grande", serif;
+	text-align: center;
+}
+ul {
+	list-style-type: none;	
+	clear: right;
+	float: left;margin: 0px 0;padding: 3px;
+}
+
+li.property {
+	width: 100%;
+	padding: 10px 0;
+	font-size: 20px;
+	color: maroon;text-align: left;
+	border-top: solid black 1px;
+	font-family: Arial, san-serif;
+}
+
+ul li ul li.property{
+	font-size: 17px;	
+	background-color: lightgray;
+	width: 100%;	margin: 0px;
+	text-align:center;
+	color: blue;
+
+}
+ul ul{
+	border: none;
+	width: 585px;
+    padding: 0;margin: 0;
+}
+
+ul li ul li.property{
+	border-right: solid black 2px;padding: 0 2px;margin:0 -15px 0 0;
+}
+ul li ul li{
+	border-right: solid black;
+	border: none;padding: 10px;
+	float: left;
+}
+
+ul li ul{
+	border: none;
+	clear: left;
+	width: 122px; float: left; 
+	padding: 0;margin: 0;
+}
+
+#help {
+clear: both;	
+}
+
+body{
+	width: 600px;
+	margin: 10px auto;
+	padding: 10px;
+}
+
