@@ -178,8 +178,8 @@ class rxNormRef extends rxNormApi{
 				//die($cache_token);
 				if(file_exists($cache_token)){
 					echo( file_get_contents($cache_token));
-					echo $this->footer .   self::stats(1) ; 
-					die( '</body></html>');
+					echo $this->footer .'<div id ="stats"'.   self::stats(1) ; 
+					die( "\n</div>\n</body>\n</html>");
 				}
 			}
 		}
