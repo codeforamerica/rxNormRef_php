@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 RxNormRef
@@ -9,7 +8,6 @@ A tool to access the NIH's database of semantic medical terms. Uses the rxNorm_p
 How to Install/Use
 ==================
 Upload to web server, call rxNormRef.php (can also optionally be named to index.php).
-
 
 */
 
@@ -31,16 +29,8 @@ class rxNormRef extends rxNormApi{
 		// preventing all subsequent api calls.
 		$this->start_time = (float) array_sum(explode(' ',microtime()));
 		$this->oh_memory = round(memory_get_usage() / 1024);
-		$this->footer = "
-		<div id = 'help'>
-			<h3>Where to start?</h3>
-			<p>An RXCUI refers to a record which can refer to a drug, or a drug concept.</p>
-			<p>First type in the name of a concept or drug, to look up the RXCUI, and select the type of search query to perform from the drop down menu.</p>
-			<h3>About</h3>
-			<p>Built with PHP5, and the <a href='https://github.com/codeforamerica/rxNorm_php'>rxNorm_php api library</a> to access the <a href='http://www.nlm.nih.gov/'>NiH databases</a>.</p>
-		</div>
+		$this->footer = "\n\t<div id = 'help'>\n\t\t<h3>Where to start?</h3>\n\t\t<p>An RXCUI refers to a record which can refer to a drug, or a drug concept.</p>\n\t\t<p>First type in the name of a concept or drug, to look up the RXCUI, and select the type of search query to perform from the drop down menu.</p>\n\t<h3>About</h3>\n\t\t<p>Built with PHP5, and the <a href='https://github.com/codeforamerica/rxNorm_php'>rxNorm_php api library</a> to access the <a href='http://www.nlm.nih.gov/'>NiH databases</a>.</p>\n\t</div>
 		";
-
 
 		if(PROGRESSIVE_LOAD == true){
    	 	    @apache_setenv('no-gzip', 1);
@@ -56,7 +46,7 @@ class rxNormRef extends rxNormApi{
 		// if we haven't died by now then close and flush the ob cache for the final time
 		self::ob_cacher(1);
 		// echo the footer and stats to screen.
-		echo $this->footer .  self::stats() . "\n</body>\n\t</html>";
+		echo $this->footer .  self::stats() . "\n\t</body>\n</html>";
 
 	}
 
@@ -95,7 +85,6 @@ class rxNormRef extends rxNormApi{
 				foreach($search->suggestionGroup->suggestionList->suggestion as $loc=>$value)
 					if($loc==0) $first = $value;
 						echo "\n\t$value\t\n";
-					
 				echo '<br><b>Showing first sugestion '.$first.'</b>';
 				unset($search);
 				$xml= new SimpleXMLElement($this->findRxcuiByString("$first"));
@@ -107,14 +96,13 @@ class rxNormRef extends rxNormApi{
 			self::ob_cacher();	
 			unset($xml);
 		}
-		
 		if($_POST['searchTerm'] && $_POST['action']== 'Drugs') {
 			$xml = new SimpleXMLElement($this->getDrugs($_POST['searchTerm']));
 			self::list_2d_xmle($xml->drugGroup->conceptGroup);
 			unset($xml);
 		}
 	}
-	
+
 	function xmle_table_row($key,$value,$key_css_class='property',$value_css_class='value'){
 		$normalElements = Array(
 			'TTY'=>'Term Type',
@@ -132,9 +120,9 @@ class rxNormRef extends rxNormApi{
 			'TMSY'=>'Term Type',
 			'BPCK'=>'Brand Name Pack',
 			'GPCK'=>'Generic Pack');
-		return "\n\t<ul>\n\t\t<li class='$key_css_class'>".($normalElements[strtoupper($key)]?$normalElements[strtoupper($key)]:$key)."</li>".($key!='tty' && $value != '' ? "\n\t\t<li class='$value_css_class'>".($normalElements[strtoupper($value)]?$normalElements[strtoupper($value)]:$value)."</li>":NULL)."\n\t\t\t</ul>\n";
+		return "\n\t\t<ul>\n\t\t\t<li class='$key_css_class'>".($normalElements[strtoupper($key)]?$normalElements[strtoupper($key)]:$key)."</li>".($key!='tty' && $value != '' ? "\n\t\t\t<li class='$value_css_class'>".($normalElements[strtoupper($value)]?$normalElements[strtoupper($value)]:$value)."</li>":NULL)."\n\t\t</ul>\n";
 	}
-	
+
 	function cache_token(){
 	// generates file name for cache storage
 		if($_POST){
@@ -143,7 +131,7 @@ class rxNormRef extends rxNormApi{
 			return implode('_',$token);
 		}
 	}
-	
+
 	function ob_cacher($stop=NULL){
 		global $footer;
 		if(PROGRESSIVE_LOAD == true){		
@@ -166,17 +154,17 @@ class rxNormRef extends rxNormApi{
 					die( '</body></html>');
 				}
 			}
-		}		
+		}
 	}
 
 	function list_2d_xmle($xml){
 		if($xml->properties)
 		// for the concept properties processing or xml elements that do not contain more xmlelements
 			foreach($xml->properties as $value){
-				$result .="<tr>";
+				$result .="\t<ul>";
 				foreach($value as $key=>$value2)
-					$result .=  ($value2 != '' ? "<td>" .self::xmle_table_row($key,$value2) . "</td>": NULL);
-				$result .="</tr>";
+					$result .=  ($value2 != '' ? "<li>" .self::xmle_table_row($key,$value2) . "</li>": NULL);
+				$result .="\t</ul>";
 			}
 		else{
 			foreach($xml as $value){
@@ -187,15 +175,15 @@ class rxNormRef extends rxNormApi{
 						foreach($value2 as $key3=>$value3)
 						// getting rid of column values that are redudant and LANGUAGE
 							if($key3 != 'tty' && $key3 != 'suppress' && $key3 != 'language'){
-									echo ($key3=='rxcui'?'<hr>':NULL) . "<ul><li>" .($second_row==true?self::xmle_table_row(NULL,$value3):self::xmle_table_row($key3,$value3)) .  '</li></ul>' ;
+									echo ($key3=='rxcui'?'<hr>':NULL). "\n<ul>\n\t<li>" .($second_row==true?self::xmle_table_row(NULL,$value3):self::xmle_table_row($key3,$value3)) .  "\n\t</li>\n</ul>" ;
 									self::ob_cacher();
 							}
-						$second_row = true;	
+						$second_row = true;
 					}elseif($value->conceptProperties && $value2 != ''){
-						echo "<ul>" .self::xmle_table_row(($key != 'tty'?$key:$value2),($key != 'tty'?$value2:NULL)). '</ul>';
+						echo "\n\t<ul>\n\t" .self::xmle_table_row(($key != 'tty'?$key:$value2),($key != 'tty'?$value2:NULL)). "\n</ul>";
 						self::ob_cacher();
 						}
-				}	
+				}
 		}
 		}
 		unset($xml);
@@ -231,9 +219,7 @@ echo '
 	<form method="post">
 		<fieldset>
 			<legend>Lookup RXCUI</legend>
-			<label>Enter RXCUI</label>
 			<input type="text" name="rxcui" value="'.($_POST['rxcui']?$_POST['rxcui']:NULL).'"/>
-			
 			<select name="action">
 			  	<option value="AllRelatedInfo">All Related Info</option>
 				<option value="NDCs">NDCs</option>
@@ -247,5 +233,4 @@ echo '
 			<input type ="submit">
 		</fieldset>
 		</form>';
-//	self::ob_cacher();
  new RxNormRef;
