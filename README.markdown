@@ -1,18 +1,20 @@
 RxNormRef
 =========
-*Ronaldo Barbachano
-*Aug. 2010
+**Ronaldo Barbachano**
+
+**Aug. 2010**
 
 
 A tool to access the NIH's database of semantic medical terms. Uses the rxNorm_php api library maintained by Code For America.
 
 Features 
 ========
+
 **100% Object Oriented**
 
 **Low Memory Use - usually well under 1 meg.**
 
-*Fast Record Loading - around .2 to .5 seconds for most queries.**
+**Fast Record Loading - around .2 to .5 seconds for most queries.**
 
 **Progressive Loading - Creates a buffer that refreshes to screen in a rapid fashion as data is processed.**
 
