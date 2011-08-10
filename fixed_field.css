@@ -1,3 +1,4 @@
+
 hr {
 /*
 temporary fix
@@ -10,9 +11,9 @@ temporary fix
 p{padding-top: 10px;
 clear:both;}
 
-#header{clear: both;width: 800px;background-color: white;height: 75px;padding: 20px 0;margin: 0;margin-bottom: 10px;
+#header{background-color: white;clear: both;width: 800px;height: 75px;padding: 20px 0;;margin-bottom: 10px;
 top: 0;
-position: fixed;
+position: fixed;border-bottom: solid black;
 }
 ul {
 	list-style-type: none;	
@@ -32,16 +33,20 @@ li.property {
 	font-family: Arial, san-serif;padding: 10px;
 }
 
-.main_form, h1 {padding: 0px 0px 0 0px;margin: 0;border-bottom: solid gray 8px;
-	float: left;width: 275px;height: 80px;
+.main_form, h1 {padding: 0px 0px 0 0px;margin: 0;border-bottom: solid gray 4px;
+	float: left;width: 160px;height: 80px;
 	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
 }
 
-#header h1{width: 30%;
-	padding-left: 10px;
+#header h1{width:470px;color: maroon;
+	padding-left: 10px;font-size: 25px;
 }
 
-.main_form fieldset{	padding-top: 10px;border: none;float: left;clear: none;}
+input, select{width: 140px;
+	clear: both;
+}
+
+.main_form fieldset{margin-top:-10px;padding: 0px; border: none;}
 
 ul li ul li.property{
 	background-color: none;
@@ -64,11 +69,10 @@ ul ul{
 
 ul li ul li{
 	margin: 0;
-	border: none;padding: 0 10px;background-color: none;
+	border: none;padding: 0 10px;
 }
 
 ul li ul{
-	background-color: whitesmoke;
 	border: none;
 	clear: left;
 	width: 190px; float: left; 
@@ -79,13 +83,17 @@ ul li ul{
 #help {clear: both;	border-top: solid black 1px; padding: 0;margin: 0;
 bottom: 0; 
 }
-html{background-color: gray;}
+
 
 body{
-	background-color: whitesmoke;
-	width: 800px;
+	width: 800px;min-height: auto;
 	margin: 0px auto;
 }
+
+#header form.main_form {
+	font-size: 16px;
+}
+
 
 h3 {clear: both;}
 h4,b,p,h3{
@@ -106,4 +114,5 @@ bottom: 0;
 margin: 0;margin-right: 10px;position: static;top: 0;
 	clear:none;float: right;
 }
+
 
