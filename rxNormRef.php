@@ -14,26 +14,31 @@ Upload to web server, call rxNormRef.php (can also optionally be named to index.
 require 'APIBaseClass.php';
 require 'rxNormApi.php';
 define('PROGRESSIVE_LOAD', true);
+
 // progressive load doesnt load cached pages 'progressively'
 define('CACHE_QUERY',false);
-
 
 // caching requires progressive load to be true
 // make sure this folder has proper permissions
 define('CACHE_STORE','cache_query/');
+
 // shows the umlscui column, enabled by default
 define('SHOW_UML',false);
+
 // force 'synonyml column to show (for debugging)
 // Special handling of synonym column is required since they only appear to have values in all but two concept groups 
 define('SHOW_ALL_SYNONYM',false);
+
 // changing this will def. mess up the included template
 define('SHOW_RXCUI',true);
 define('SHOW_NAME',true);
+
 // these still work, but will change the layout signfigantly depending on total number of columns
 // these are all very redudant to display so disabled by default
 define('SHOW_LANGUAGE',false);
 define('SHOW_TTY',false);
 define('SHOW_SUPPRESS',false);
+
 // use if you're a data minor and have written another xml stucture... the 
 // rxNorm structure is verbose and very embeded, it could definately use a shift
 define('SHOW_ALL',false);
@@ -70,7 +75,6 @@ class rxNormRef extends rxNormApi{
 			ob_implicit_flush(1);
 			ob_start();
 		}
-		
 		// process any post if existant
 		if($_POST) self::post_check();
 		// if we haven't died by now then close and flush the ob cache for the final time
@@ -103,9 +107,9 @@ class rxNormRef extends rxNormApi{
 		// look up inside of defined cache location
 			$xml = new SimpleXMLElement($this->findRxcuiByString($_POST['searchTerm']));
 			$id = $xml->idGroup->rxnormId;
-			if($id != '') {
+			if($id != '') 
 				echo '<p class="term_result">Term "<b>'. $_POST['searchTerm'] . '</b>" matches RXCUI: <b>' .$id . "</b></p>\n" ;
-			}
+			
 			else{
 				$search = new SimpleXMLElement($this->getSpellingSuggestions($_POST['searchTerm']));
 				echo '<p class="term_result"><h3>Term <b>"'. $_POST['searchTerm'].'"</b> not found</h3>
@@ -147,9 +151,6 @@ class rxNormRef extends rxNormApi{
 			'TMSY'=>'Term Type',
 			'BPCK'=>'Brand Name Pack',
 			'GPCK'=>'Generic Pack');
-
-// return only the value in a  single element list?? or bypas this completely?
-//		if($key ==null) return
 		return  "\n\t\t<ul>\n\t\t\t<li class='$key_css_class'>".($normalElements[strtoupper($key)]?$normalElements[strtoupper($key)]:$key)."</li>".($key!='tty' && $value != '' ? "\n\t\t\t<li class='$value_css_class'>".($normalElements[strtoupper($value)]?$normalElements[strtoupper($value)]:$value)."</li>":NULL)."\n\t\t</ul>\n";
 	}
 
@@ -175,7 +176,6 @@ class rxNormRef extends rxNormApi{
 				if($stop!= NULL ) ob_start();	
 			}elseif($_POST && CACHE_QUERY == TRUE){
 				$cache_token = CACHE_STORE.self::cache_token();
-				//die($cache_token);
 				if(file_exists($cache_token)){
 					echo( file_get_contents($cache_token));
 					echo $this->footer .'<div id ="stats"'.   self::stats(1) ; 
@@ -205,8 +205,6 @@ class rxNormRef extends rxNormApi{
 						foreach($value2 as $key3=>$value3){
 						// getting rid of column values that are redudant and LANGUAGE, also only showing the synoym columns for SCD and SBD types .. but these may exist in  other queries (possibly..)
 							if((!in_array($key3,$this->c_filter) )  || ($key3 == 'synonym' && in_array(strtoupper($parent_name),array( 'SCD','SBD')))){
-//								if($second_row == true) echo "<ul><li><ul><li>$value3</li><li></li></ul></li></ul>";
-//								else
 								echo ($key3=='rxcui'?'<hr>':NULL). "\n<ul>\n\t<li>" .($second_row==true?self::xmle_table_row(NULL,$value3):self::xmle_table_row($key3,$value3)) .  "\n\t</li>\n</ul>" ;
 							}
 						}
